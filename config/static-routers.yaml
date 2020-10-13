@@ -1,0 +1,32 @@
+http:
+  routers:
+    www.star-citizen.wiki:
+      entryPoints:
+        - https
+      middlewares:
+        - star-citizen-redirect
+      rule: "Host(`www.star-citizen.wiki`)"
+      service: noop
+      tls: {}
+
+    star-citizen.wiki-images:
+      entryPoints:
+        - https
+      rule: "Host(`star-citizen.wiki`) && PathPrefix(`/{image:[Ii]}mages/`)"
+      middlewares:
+        - star-citizen-images-redirect
+      service: cdn-star-citizen-wiki-cdnstar-citizenwiki@docker
+      tls: {}
+      priority: 29
+
+    archiv.star-citizen.wiki-images:
+      entryPoints:
+        - https
+      rule: "Host(`archiv.star-citizen.wiki`) && PathPrefix(`/{image:[Ii]}mages/`)"
+      middlewares:
+        - archiv-star-citizen-images-redirect
+      service: cdn-archiv-star-citizen-wiki-cdnarchivstar-citizenwiki@docker
+#      service: noop
+      tls: {}
+      priority: 35
+

@@ -1,0 +1,10 @@
+http:
+  routers:
+    https-redirect:
+      entryPoints:
+        - http
+      middlewares:
+        - https-redirect
+      rule: "HostRegexp(`{any:.*}`)"
+      service: noop
+      priority: 20

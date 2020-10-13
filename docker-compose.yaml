@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik
+    container_name: traefik
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+
+    environment:
+      - CF_API_EMAIL=
+      - CF_DNS_API_TOKEN=
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/traefik/traefik.yaml:/traefik.yaml:ro
+      - /etc/traefik/config:/config:ro
+      - /etc/traefik/letsencrypt:/letsencrypt
+      - /var/log/traefik:/var/log/traefik
+
+    networks:
+      - proxy
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users="
+      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
+
+      - "traefik.http.routers.traefik-secure.entrypoints=https"
+      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.star-citizen.wiki`)"
+      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=dns"
+      - "traefik.http.routers.traefik-secure.service=api@internal"
+
+networks:
+  proxy:
+    external: true
