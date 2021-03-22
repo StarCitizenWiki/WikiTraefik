@@ -42,6 +42,9 @@ entryPoints:
         - "2405:8100::/32"
         - "2a06:98c0::/29"
         - "2c0f:f248::/32"
+    middlewares:
+      - default@file
+
 providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
