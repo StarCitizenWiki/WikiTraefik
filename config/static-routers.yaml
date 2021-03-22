@@ -26,7 +26,18 @@ http:
       middlewares:
         - archiv-star-citizen-images-redirect
       service: cdn-archiv-star-citizen-wiki-cdnarchivstar-citizenwiki@docker
-#      service: noop
       tls: {}
       priority: 35
 
+    discord.star-citizen.wiki:
+      rule: "Host(`discord.star-citizen.wiki`)"
+      entryPoints:
+        - https
+      tls:
+        options: default
+        certResolver: dns
+        domains:
+          - main: discord.star-citizen.wiki
+      middlewares:
+        - discord-star-citizen-wiki-redirect
+      service: noop
