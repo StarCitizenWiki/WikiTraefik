@@ -23,12 +23,11 @@ http:
     default:
       chain:
         middlewares:
-        - default-headers
-        - remove-token-headers
-        - compress
+          - default-headers
+          - remove-token-headers
+          - compress
 
-
-### Domain Redirects
+    ### Domain Redirects
     star-citizen-redirect:
       redirectRegex:
         regex: "^https://www.star-citizen.wiki/(.*)"
@@ -54,14 +53,14 @@ http:
         permanent: true
 
 
-### Domain CSP
+    ### Domain CSP
     api-star-citizen-csp:
       headers:
-        contentSecurityPolicy: "default-src 'none'; form-action 'self'; img-src 'self' data: https://robertsspaceindustries.com https://media.robertsspaceindustries.com https://cig-galactapedia-prod.s3.amazonaws.com; media-src 'self' data: https://robertsspaceindustries.com https://media.robertsspaceindustries.com; connect-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'"
+        contentSecurityPolicy: "default-src 'none'; form-action 'self'; img-src 'self' data: https://robertsspaceindustries.com https://media.robertsspaceindustries.com https://cig-galactapedia-prod.s3.amazonaws.com; media-src 'self' data: https://robertsspaceindustries.com https://media.robertsspaceindustries.com; connect-src 'self' https://star-citizen.wiki/api.php; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'"
 
     star-citizen-csp:
       headers:
-        contentSecurityPolicy: "default-src 'self'; connect-src 'self' https://cdn.star-citizen.wiki https://analytics.star-citizen.wiki; form-action 'self' https://api.star-citizen.wiki; img-src 'self' data: blob: android-webview-video-poster: https://cdn.star-citizen.wiki https://scripts.star-citizen.wiki; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://analytics.star-citizen.wiki; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; worker-src 'self' blob:; media-src 'self' https://cdn.star-citizen.wiki; font-src 'self' data: blob: https://fonts.gstatic.com; object-src 'none'"
+        contentSecurityPolicy: "default-src 'self'; connect-src 'self' https://cdn.star-citizen.wiki https://analytics.star-citizen.wiki; form-action 'self' https://api.star-citizen.wiki; img-src 'self' data: blob: android-webview-video-poster: https://cdn.star-citizen.wiki; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://analytics.star-citizen.wiki; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:; media-src 'self' https://cdn.star-citizen.wiki; font-src 'self' data: blob:; object-src 'none'"
 
     archiv-star-citizen-csp:
       headers:
@@ -73,16 +72,8 @@ http:
         customRequestHeaders:
           X-Forwarded-Proto: "https"
 
-    cdn-star-citizen-headers:
+    api-route-headers:
       headers:
-        customResponseHeaders:
-          X-Frame-Options: "SAMEORIGIN"
-          X-Powered-By: ""
-          Server: "nginx"
-          Cache-Control: "public, max-age=86400"
-          Timing-Allow-Origin: "*"
-          Referrer-Policy: "strict-origin"
-          Access-Control-Allow-Headers: '*'
         contentSecurityPolicy: "default-src 'self';"
         accessControlAllowMethods:
           - GET
@@ -114,4 +105,21 @@ http:
           - Origin
         accessControlAllowOriginList:
           - '*'
-        accessControlMaxAge: 1728000
+        accessControlMaxAge: 3600
+
+    max-cache-headers:
+      headers:
+        customResponseHeaders:
+          X-Frame-Options: "SAMEORIGIN"
+          X-Powered-By: ""
+          Server: ""
+          Cache-Control: "public, max-age=31536000"
+          Timing-Allow-Origin: "*"
+          Referrer-Policy: "strict-origin"
+          Access-Control-Allow-Headers: '*'
+
+    cdn-star-citizen-headers:
+      chain:
+        middlewares:
+          - api-route-headers
+          - max-cache-headers
