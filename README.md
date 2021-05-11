@@ -10,4 +10,4 @@ The token needs the following permissions:
   * Zone: Read
   * DNS: Edit
 
-Don't forgett to add `basicauth` credentials to `docker-compose.yaml`.  
+Don't forget to add `basicauth` credentials to `docker-compose.yaml`.  
