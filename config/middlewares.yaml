@@ -90,6 +90,7 @@ http:
           - ETag
           - Expires
           - Last-Modified
+          - Range
           - X-Cache
           - X-Varnish
         accessControlAllowHeaders:
